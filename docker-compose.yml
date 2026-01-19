@@ -1,30 +1,29 @@
-﻿# Docker Compose - Full Stack Application
-# All services (frontend, backend, database) run in containers
+﻿# Docker Compose - Multi-container app
 #
 # Usage:
 #   docker-compose up --build
 #
 # Services:
-#   - db: PostgreSQL database
-#   - server: Express backend API
-#   - client: React frontend
+#   - app: Node/Express API (serves built frontend)
+#   - db: MySQL database
+#   - nginx: public reverse proxy
 
 services:
-  # PostgreSQL Database
+  # MySQL Database
   db:
-    image: postgres:15-alpine
-    container_name: habit-budget-db
+    image: mysql:8.0
+    container_name: habit-budget-mysql
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-habit_budget_db}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      PGDATA: /var/lib/postgresql/data/pgdata
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-habit_budget_db}
+      MYSQL_USER: ${MYSQL_USER:-habit_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-habit_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${MYSQL_PORT:-3306}:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-habit_budget_db}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -33,56 +32,42 @@ services:
       - app-network
     restart: unless-stopped
 
-  # Backend API Server
-  server:
+  # Application API (serves frontend build)
+  app:
     build:
       context: .
-      dockerfile: Dockerfile.dev
-    container_name: habit-budget-server
+      dockerfile: Dockerfile
+    container_name: habit-budget-app
     env_file:
       - .env
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: ${NODE_ENV:-production}
       PORT: ${PORT:-5000}
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-habit_budget_db}
-    ports:
-      - "${PORT:-5000}:5000"
-    volumes:
-      # Mount server code for hot-reload (development)
-      - ./server:/app/server
-      # Exclude node_modules to use container's installed packages
-      - /app/node_modules
-      # Mount package.json to detect dependency changes
-      - ./package.json:/app/package.json
+      DATABASE_URL: mysql://${MYSQL_USER:-habit_user}:${MYSQL_PASSWORD:-habit_password}@db:3306/${MYSQL_DATABASE:-habit_budget_db}
     depends_on:
       db:
         condition: service_healthy
     networks:
       - app-network
     restart: unless-stopped
-    command: npm run server
 
-  # React Frontend
-  client:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-      args:
-        REACT_APP_API_URL: ${REACT_APP_API_URL:-http://localhost:5000}
-    container_name: habit-budget-client
-    environment:
-      - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:5000}
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: habit-budget-nginx
     ports:
-      - "${CLIENT_PORT:-3000}:3000"
+      - "${NGINX_PORT:-8080}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      server:
+      app:
         condition: service_started
     networks:
       - app-network
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  mysql_data:
     driver: local
 
 networks:
