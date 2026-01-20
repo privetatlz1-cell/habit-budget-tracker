@@ -92,18 +92,6 @@ services:
       - monitoring
     restart: unless-stopped
 
-  mysql_exporter:
-    image: prom/mysqld-exporter:latest
-    env_file:
-      - ./.env
-    environment:
-      - DATA_SOURCE_NAME=${MYSQL_USER}:${MYSQL_PASSWORD}@(db:3306)/
-    ports:
-      - "9104:9104"
-    networks:
-      - monitoring
-      - app-network
-    restart: unless-stopped
 
 volumes:
   es_data:
