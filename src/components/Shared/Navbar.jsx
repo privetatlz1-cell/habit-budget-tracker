@@ -4,10 +4,8 @@ import { useTheme } from "../../contexts/ThemeContext";
 
 export default function Navbar() {
   const { language, setLanguage } = useLanguage();
-  const { theme, setTheme } = useTheme();
-
+  const { theme } = useTheme();
   const toggleLang = () => setLanguage(language === 'en' ? 'ru' : 'en');
-  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
   return (
     <div className="w-full bg-white/80 dark:bg-[#2C2F3A]/80 backdrop-blur-lg border-b border-gray-200 dark:border-neutral-medium/30">
@@ -20,13 +18,6 @@ export default function Navbar() {
             title="Language"
           >
             {language === 'en' ? 'EN' : 'RU'}
-          </button>
-          <button 
-            onClick={toggleTheme} 
-            className="icon-btn text-gray-600 dark:text-neutral-light hover:text-primary-purple" 
-            title="Theme"
-          >
-            {theme === 'dark' ? '🌙' : '☀️'}
           </button>
         </div>
       </div>

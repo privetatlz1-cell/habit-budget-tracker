@@ -174,11 +174,11 @@ export default function TaskBoard({ type = 'personal' }) {
           <div className="text-gray-500 dark:text-neutral-light">{t('loading') || 'Loading...'}</div>
         </div>
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-4">
+        <div className="flex flex-col gap-4 pb-4 sm:flex-row sm:overflow-x-auto">
           {categories.map(category => (
             <div
               key={category}
-              className="flex-shrink-0 w-80 bg-gray-50 dark:bg-[#2C2F3A] rounded-lg p-4"
+              className="w-full sm:flex-shrink-0 sm:w-80 bg-gray-50 dark:bg-[#2C2F3A] rounded-lg p-4"
             >
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {category}
@@ -187,7 +187,7 @@ export default function TaskBoard({ type = 'personal' }) {
                 </span>
               </h3>
               
-              <div className="space-y-3 max-h-[calc(100vh-300px)] overflow-y-auto">
+              <div className="space-y-3 max-h-[calc(100vh-320px)] overflow-y-auto">
                 {tasksByCategory[category]?.map(task => (
                   <TaskCard
                     key={task.id}

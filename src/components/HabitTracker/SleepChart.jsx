@@ -148,7 +148,7 @@ export default function SleepChart({ data = [] }) {
       </div>
       
       <div className="h-64">
-        <canvas ref={canvasRef} />
+        <canvas ref={canvasRef} className="w-full" />
       </div>
       
       <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-neutral-medium/30">

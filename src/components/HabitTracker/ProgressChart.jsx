@@ -27,6 +27,7 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -70,6 +71,7 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -101,13 +103,13 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
     <div className="card p-5">
       <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Progress Overview</h3>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
+        <div className="h-48 sm:h-52">
           <h4 className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-2">Daily completion (last 7 days)</h4>
-          <canvas ref={dailyRef} height={200} />
+          <canvas ref={dailyRef} />
         </div>
-        <div>
+        <div className="h-48 sm:h-52">
           <h4 className="text-sm font-medium text-gray-500 dark:text-slate-400 mb-2">Weekly completion (last 4 weeks)</h4>
-          <canvas ref={weeklyRef} height={200} />
+          <canvas ref={weeklyRef} />
         </div>
       </div>
     </div>

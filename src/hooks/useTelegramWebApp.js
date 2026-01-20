@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import WebApp from '@twa-dev/sdk';
 
 const fallbackTheme = {
-  bg_color: '#ffffff',
-  text_color: '#111827',
-  hint_color: '#6b7280',
-  link_color: '#3b82f6',
-  button_color: '#4f46e5',
+  bg_color: '#0b1220',
+  text_color: '#e2e8f0',
+  hint_color: '#94a3b8',
+  link_color: '#60a5fa',
+  button_color: '#6366f1',
   button_text_color: '#ffffff',
-  secondary_bg_color: '#f8fafc'
+  secondary_bg_color: '#111827'
 };
 
 export default function useTelegramWebApp() {
@@ -16,8 +16,7 @@ export default function useTelegramWebApp() {
     if (!WebApp) return;
 
     const applyTheme = () => {
-      const themeParams = WebApp.themeParams || {};
-      const resolved = { ...fallbackTheme, ...themeParams };
+      const resolved = { ...fallbackTheme };
 
       const root = document.documentElement;
       root.style.setProperty('--tg-bg-color', resolved.bg_color);
@@ -28,8 +27,7 @@ export default function useTelegramWebApp() {
       root.style.setProperty('--tg-button-text-color', resolved.button_text_color);
       root.style.setProperty('--tg-secondary-bg-color', resolved.secondary_bg_color);
 
-      const isDark = WebApp.colorScheme === 'dark';
-      root.classList.toggle('dark', isDark);
+      root.classList.add('dark');
       WebApp.setHeaderColor(resolved.bg_color);
     };
 

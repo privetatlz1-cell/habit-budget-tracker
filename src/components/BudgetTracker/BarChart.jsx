@@ -44,7 +44,8 @@ const BarChart = React.memo(function BarChart({ data = [] }) {
         ]
       },
       options: { 
-        responsive: true, 
+        responsive: true,
+        maintainAspectRatio: false,
         scales: { y: { beginAtZero: true } }, 
         plugins: { 
           legend: { position: 'bottom' },
@@ -62,7 +63,11 @@ const BarChart = React.memo(function BarChart({ data = [] }) {
     return () => chart.destroy();
   }, [series, language, t]);
 
-  return <canvas ref={canvasRef} height={200} />;
+  return (
+    <div className="w-full h-52 sm:h-56">
+      <canvas ref={canvasRef} />
+    </div>
+  );
 });
 
 export default BarChart;

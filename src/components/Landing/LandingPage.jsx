@@ -86,10 +86,10 @@ export default function LandingPage({ onOpenDashboard, user }) {
         </div>
 
         <div className="relative">
-          <div className="absolute -top-8 -left-6">
+          <div className="absolute -top-8 -left-6 hidden sm:block">
             <FloatingStat label="Streak" value="28 days" accent="text-[#10B981]" />
           </div>
-          <div className="absolute -bottom-8 right-4">
+          <div className="absolute -bottom-8 right-4 hidden sm:block">
             <FloatingStat label="Savings" value="$420" accent="text-semantic-blue" />
           </div>
           <div className="card p-6 md:p-8 space-y-6">

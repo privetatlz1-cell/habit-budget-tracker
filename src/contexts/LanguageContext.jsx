@@ -351,8 +351,7 @@ export function LanguageProvider({ children }) {
   const getDefault = () => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('lang') : null;
     if (saved && (saved === 'en' || saved === 'ru')) return saved;
-    const nav = typeof navigator !== 'undefined' ? (navigator.language || navigator.userLanguage || 'en') : 'en';
-    return nav.startsWith('ru') ? 'ru' : 'en';
+    return 'ru';
   };
 
   const [language, setLanguageState] = useState(getDefault);

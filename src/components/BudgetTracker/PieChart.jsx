@@ -43,6 +43,8 @@ const PieChart = React.memo(function PieChart({ data }) {
         }]
       },
       options: { 
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: { 
           legend: { position: "bottom" },
           tooltip: {
@@ -53,13 +55,16 @@ const PieChart = React.memo(function PieChart({ data }) {
               }
             }
           }
-        }, 
-        responsive: true 
+        }
       }
     });
     return () => chart.destroy();
-  }, [chartData]);
-  return <canvas ref={canvasRef} width={180} height={180} />;
+  }, [chartData, language]);
+  return (
+    <div className="w-full h-48 sm:h-52">
+      <canvas ref={canvasRef} />
+    </div>
+  );
 });
 
 export default PieChart;

@@ -147,7 +147,7 @@ export default function EventModal({ event, date, onSave, onDelete, onClose }) {
           </div>
 
           {/* Date & Time */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-neutral-light mb-2">
                 {t('startDate') || 'Start Date'} *
@@ -189,7 +189,7 @@ export default function EventModal({ event, date, onSave, onDelete, onClose }) {
 
           {/* Time (if not all day) */}
           {!allDay && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-neutral-light mb-2">
                   {t('startTime') || 'Start Time'}
@@ -216,7 +216,7 @@ export default function EventModal({ event, date, onSave, onDelete, onClose }) {
           )}
 
           {/* Category & Color */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-neutral-light mb-2">
                 {t('category') || 'Category'}

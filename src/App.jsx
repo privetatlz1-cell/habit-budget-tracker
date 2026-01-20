@@ -6,10 +6,12 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ToastProvider } from './components/Shared/Toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { useLanguage } from './contexts/LanguageContext';
 import useTelegramWebApp from './hooks/useTelegramWebApp';
 
 function AppContent() {
   const { user, loading, isTelegram, error, logout } = useAuth();
+  const { language, setLanguage } = useLanguage();
   const [view, setView] = useState('home');
 
   useTelegramWebApp();
@@ -54,7 +56,18 @@ function AppContent() {
 
   return (
     <div className="min-h-screen">
-      <main className="mx-auto max-w-6xl p-4 md:p-6">
+      <main className="mx-auto w-full max-w-6xl p-3 sm:p-4 md:p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-sm font-semibold text-gray-200">Habit & Budget</div>
+          <button
+            onClick={() => setLanguage(language === 'en' ? 'ru' : 'en')}
+            className="icon-btn text-gray-200 hover:text-primary-purple"
+            type="button"
+            title="Language"
+          >
+            {language === 'en' ? 'EN' : 'RU'}
+          </button>
+        </div>
         {view === 'dashboard' ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between card px-4 py-3">
