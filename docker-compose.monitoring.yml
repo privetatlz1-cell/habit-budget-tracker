@@ -77,6 +77,14 @@ services:
     image: prom/node-exporter:latest
     ports:
       - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    command:
+      - "--path.rootfs=/host"
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
     networks:
       - monitoring
     restart: unless-stopped
@@ -85,11 +93,15 @@ services:
     image: gcr.io/cadvisor/cadvisor:latest
     ports:
       - "8081:8080"
+    privileged: true
+    devices:
+      - /dev/kmsg
     volumes:
       - /:/rootfs:ro
-      - /var/run:/var/run:rw
+      - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
     networks:
       - monitoring
     restart: unless-stopped
