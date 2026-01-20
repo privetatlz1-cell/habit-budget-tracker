@@ -38,6 +38,12 @@ export default function CalendarView({
     });
   }, [currentWeekOffset]);
 
+  const normalizeDate = (value) => {
+    if (!value) return null;
+    const str = String(value);
+    return str.slice(0, 10);
+  };
+
   // Load sleep data for the current week
   useEffect(() => {
     const loadData = async () => {
@@ -51,7 +57,10 @@ export default function CalendarView({
           const sleepEntries = await sleepRes.json();
           const sleepMap = {};
           sleepEntries.forEach(entry => {
-            sleepMap[entry.date] = entry.hours;
+            const dateKey = normalizeDate(entry.date);
+            if (!dateKey) return;
+            const hours = Number(entry.hours);
+            sleepMap[dateKey] = Number.isFinite(hours) ? hours : entry.hours;
           });
           setSleepData(sleepMap);
         }
@@ -222,6 +231,7 @@ export default function CalendarView({
           
           const sleepHours = sleepData[iso];
           const isInsufficientSleep = sleepHours !== undefined && sleepHours < 7;
+          const showAggregateStatus = !habitId;
 
           return (
             <div key={iso} className="flex flex-col items-center gap-2">
@@ -252,7 +262,7 @@ export default function CalendarView({
                   }
                   onClick={handleDayClick}
                 >
-                  {status === 'all' && (
+                  {showAggregateStatus && status === 'all' && (
                     <svg className="w-4 h-4 text-white dark:text-slate-900" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>

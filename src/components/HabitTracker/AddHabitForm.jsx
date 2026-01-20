@@ -107,7 +107,7 @@ export default function AddHabitForm({ onAdd }) {
               {c}
             </option>
           ))}
-          <option value="Custom">Custom</option>
+          <option value="Custom">{t('custom') || 'Custom'}</option>
         </select>
         {category === 'Custom' && (
           <input

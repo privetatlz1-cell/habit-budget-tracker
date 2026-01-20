@@ -45,6 +45,10 @@ export default function SleepChart({ data = [] }) {
     const now = new Date();
     const labels = [];
     const hours = [];
+    const normalizeDate = (value) => {
+      if (!value) return null;
+      return String(value).slice(0, 10);
+    };
     
     // Get last 7 days
     for (let i = 6; i >= 0; i--) {
@@ -53,8 +57,9 @@ export default function SleepChart({ data = [] }) {
       const dateStr = date.toISOString().slice(0, 10);
       labels.push(date.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric' }));
       
-      const entry = sleepData.find(e => e.date === dateStr);
-      hours.push(entry ? entry.hours : null);
+      const entry = sleepData.find(e => normalizeDate(e.date) === dateStr);
+      const value = entry ? Number(entry.hours) : null;
+      hours.push(Number.isFinite(value) ? value : null);
     }
     
     return { labels, hours };

@@ -61,16 +61,20 @@ export function calculateHabitProgress(habit, completions = [], period = 'week')
 
     const today = new Date();
     let startDate = new Date(today);
+    let endDate = new Date(today);
     
     if (period === 'week') {
       const day = (today.getDay() + 6) % 7; // 0 = Monday
       startDate.setDate(today.getDate() - day);
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
     } else if (period === 'month') {
       startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     }
 
     // Get all scheduled days in the period
-    const scheduledDays = getScheduledDaysInPeriod(schedule, frequency, startDate, today);
+    const scheduledDays = getScheduledDaysInPeriod(schedule, frequency, startDate, endDate);
     
     // Count completed scheduled days
     const completedScheduled = habitCompletions.filter(c => {
@@ -187,34 +191,46 @@ export function isScheduledDay(habit, dateIso) {
  * @param {Object} habit - Habit object
  * @returns {string}
  */
-export function formatFrequency(habit) {
+export function formatFrequency(habit, t) {
   if (!habit) return '';
   
   const frequency = habit.frequency || 'daily';
   const schedule = habit.schedule || [];
+  const translate = typeof t === 'function' ? t : (key) => key;
 
   if (frequency === 'daily') {
-    return 'Daily';
+    return translate('daily') || 'Daily';
   }
 
   if (frequency === 'weekly') {
     if (!Array.isArray(schedule) || schedule.length === 0) {
-      return 'Weekly (no schedule)';
+      const weeklyLabel = translate('weekly') || 'Weekly';
+      const noScheduleLabel = translate('noSchedule') || 'no schedule';
+      return `${weeklyLabel} (${noScheduleLabel})`;
     }
     const dayLabels = {
-      'mon': 'Mon', 'tue': 'Tue', 'wed': 'Wed', 'thu': 'Thu',
-      'fri': 'Fri', 'sat': 'Sat', 'sun': 'Sun'
+      'mon': translate('mon') || 'Mon',
+      'tue': translate('tue') || 'Tue',
+      'wed': translate('wed') || 'Wed',
+      'thu': translate('thu') || 'Thu',
+      'fri': translate('fri') || 'Fri',
+      'sat': translate('sat') || 'Sat',
+      'sun': translate('sun') || 'Sun'
     };
     const days = schedule.map(d => dayLabels[d] || d).join(', ');
-    return `${schedule.length}×/week (${days})`;
+    const perWeek = translate('perWeek') || 'week';
+    return `${schedule.length}×/${perWeek} (${days})`;
   }
 
   if (frequency === 'monthly') {
     if (!Array.isArray(schedule) || schedule.length === 0) {
-      return 'Monthly (no schedule)';
+      const monthlyLabel = translate('monthly') || 'Monthly';
+      const noScheduleLabel = translate('noSchedule') || 'no schedule';
+      return `${monthlyLabel} (${noScheduleLabel})`;
     }
     const days = schedule.sort((a, b) => a - b).join(', ');
-    return `${schedule.length}×/month (${days})`;
+    const perMonth = translate('perMonth') || 'month';
+    return `${schedule.length}×/${perMonth} (${days})`;
   }
 
   return frequency;

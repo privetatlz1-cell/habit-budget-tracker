@@ -40,10 +40,10 @@ const HabitCard = React.memo(function HabitCard({ habit, doneToday, onToggleDay,
           )}
           <div className="flex items-center gap-2 flex-wrap mb-2">
             <span className="category-tag">
-              {habit.category || 'General'}
+              {habit.category || (t('general') || 'General')}
             </span>
             <span className="text-xs px-2 py-1 rounded-full bg-[#BFDBFE]/30 dark:bg-blue-900/30 text-gray-600 dark:text-slate-400 border border-[#BFDBFE]/50 dark:border-blue-700">
-              {formatFrequency(habit)}
+              {formatFrequency(habit, t)}
             </span>
           </div>
           {/* Progress Circle */}
@@ -60,7 +60,7 @@ const HabitCard = React.memo(function HabitCard({ habit, doneToday, onToggleDay,
             onClick={() => {
               if (!todayIsScheduled && habit.frequency !== 'daily') {
                 // Show message that today is not scheduled
-                alert(t('todayNotScheduled') || `Today is not a scheduled day for this habit. Scheduled: ${formatFrequency(habit)}`);
+                alert(t('todayNotScheduled') || `Today is not a scheduled day for this habit. Scheduled: ${formatFrequency(habit, t)}`);
                 return;
               }
               onToggleDay(habit.id, todayIso, !doneToday);

@@ -201,24 +201,46 @@ export default function HabitList({ onChanged = () => {} }) {
   }, [completedTodayCount, expectedTodayCount]);
 
   // Aggregated history for chart
-  const totalHabits = habits.length || 1;
+  const completionByDate = useMemo(() => {
+    const map = new Map();
+    historyCompletions.forEach(c => {
+      const dateRaw = c.date || c.HabitCompletion?.date;
+      const habitId = c.Habit?.id || c.HabitId || c.habit?.id;
+      const isDone = c.completed === true || c.HabitCompletion?.completed === true;
+      if (!dateRaw || !habitId || !isDone) return;
+      const date = String(dateRaw).slice(0, 10);
+      if (!map.has(date)) map.set(date, new Set());
+      map.get(date).add(habitId);
+    });
+    return map;
+  }, [historyCompletions]);
+
   const dailyChartData = useMemo(() => {
     const data = [];
     for (let offset = 6; offset >= 0; offset--) {
       const date = new Date();
       date.setDate(date.getDate() - offset);
       const iso = date.toISOString().slice(0, 10);
-      const dayCompletions = historyCompletions.filter(c => c.date === iso && (c.completed === true || c.HabitCompletion?.completed === true));
-      const completedSet = new Set(dayCompletions.map(c => (c.Habit?.id || c.HabitId)));
-      const rate = (completedSet.size / totalHabits) * 100;
+      let expected = 0;
+      let completed = 0;
+      const completedSet = completionByDate.get(iso) || new Set();
+      habits.forEach(h => {
+        const isExpected = h.frequency === 'daily' || isScheduledDay(h, iso);
+        if (!isExpected) return;
+        expected += 1;
+        if (completedSet.has(h.id)) {
+          completed += 1;
+        }
+      });
+      const rate = expected ? (completed / expected) * 100 : 0;
       data.push({
         date: iso,
         rate: Math.round(rate * 10) / 10,
-        completed: completedSet.size,
+        completed,
       });
     }
     return data;
-  }, [historyCompletions, totalHabits]);
+  }, [completionByDate, habits]);
 
   const weeklyChartData = useMemo(() => {
     const data = [];
@@ -230,21 +252,29 @@ export default function HabitList({ onChanged = () => {} }) {
       end.setDate(end.getDate() - weekIndex * 7);
 
       let completedCount = 0;
+      let expectedCount = 0;
+      const completedSetByDate = completionByDate;
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         const iso = d.toISOString().slice(0, 10);
-        const dayCompletions = historyCompletions.filter(c => c.date === iso && (c.completed === true || c.HabitCompletion?.completed === true));
-        const completedSet = new Set(dayCompletions.map(c => (c.Habit?.id || c.HabitId)));
-        completedCount += completedSet.size;
+        const completedSet = completedSetByDate.get(iso) || new Set();
+        habits.forEach(h => {
+          const isExpected = h.frequency === 'daily' || isScheduledDay(h, iso);
+          if (!isExpected) return;
+          expectedCount += 1;
+          if (completedSet.has(h.id)) {
+            completedCount += 1;
+          }
+        });
       }
 
-      const rate = ((completedCount / (totalHabits * 7)) * 100) || 0;
+      const rate = expectedCount ? (completedCount / expectedCount) * 100 : 0;
       data.push({
         label: `${start.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`,
         rate: Math.round(rate * 10) / 10,
       });
     }
     return data;
-  }, [historyCompletions, totalHabits]);
+  }, [completionByDate, habits]);
 
   return (
     <div>
@@ -284,7 +314,7 @@ export default function HabitList({ onChanged = () => {} }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
           <p className="text-gray-500 dark:text-slate-400">{t('yourHabits')}</p>
-          <p className="text-sm text-gray-500 dark:text-slate-400 mt-2">Start by adding your first habit above</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mt-2">{t('startByAddingFirstHabit') || 'Start by adding your first habit above'}</p>
         </div>
       )}
 

@@ -24,6 +24,21 @@ export default function BudgetList({ onChanged = () => {} }) {
   const [customCat, setCustomCat] = useState("");
   const [savedCats, setSavedCats] = useState([]);
   
+  const formatDateShort = (value) => {
+    if (!value) return '';
+    const datePart = String(value).slice(0, 10);
+    const [year, month, day] = datePart.split('-');
+    if (year && month && day) {
+      return `${day}.${month}.${year.slice(-2)}`;
+    }
+    const dateObj = new Date(value);
+    if (Number.isNaN(dateObj.getTime())) return value;
+    const dd = String(dateObj.getDate()).padStart(2, '0');
+    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const yy = String(dateObj.getFullYear()).slice(-2);
+    return `${dd}.${mm}.${yy}`;
+  };
+  
   // Current month/year for planning
   const now = new Date();
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
@@ -185,7 +200,7 @@ export default function BudgetList({ onChanged = () => {} }) {
         <>
           {/* Add Budget Form */}
           <form onSubmit={handleSubmit} className="card p-5 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('yourBudget')}</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-center">{t('yourBudget')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
           <select 
             value={type} 
@@ -226,7 +241,7 @@ export default function BudgetList({ onChanged = () => {} }) {
             {[...budgetCategories, ...(savedCats||[])].map(c => (
               <option key={c} value={c}>{c}</option>
             ))}
-            <option value="Custom">Custom</option>
+            <option value="Custom">{t('custom') || 'Custom'}</option>
           </select>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
@@ -274,7 +289,7 @@ export default function BudgetList({ onChanged = () => {} }) {
         </div>
       )}
       {stale && (
-        <div className="text-xs text-semantic-yellow mb-2 px-2">Rate may be outdated</div>
+        <div className="text-xs text-semantic-yellow mb-2 px-2">{t('rateOutdated') || 'Rate may be outdated'}</div>
       )}
 
       {/* Monthly Summary */}
@@ -301,33 +316,33 @@ export default function BudgetList({ onChanged = () => {} }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Budget Items Table */}
         <div className="card overflow-hidden">
-          <div className="p-4 border-b border-gray-200 dark:border-neutral-medium/30">
+          <div className="p-4 border-b border-gray-200 dark:border-neutral-medium/30 text-center">
             <h4 className="font-semibold text-gray-900 dark:text-white">{t('yourBudget')}</h4>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead>
-                <tr className="text-left text-xs font-semibold text-gray-500 dark:text-neutral-light bg-gray-50 dark:bg-[#353844] uppercase tracking-wide">
+                <tr className="text-center text-xs font-semibold text-gray-500 dark:text-neutral-light bg-gray-50 dark:bg-[#353844] uppercase tracking-wide">
                   <th className="py-3 px-4">{t('date')}</th>
                   <th className="py-3">{t('category')}</th>
                   <th className="py-3">{t('type')}</th>
-                  <th className="py-3 text-right">{t('amount')}</th>
-                  <th className="py-3 text-right"></th>
+                  <th className="py-3">{t('amount')}</th>
+                  <th className="py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {items.length === 0 ? (
                   <tr>
                     <td colSpan="5" className="py-8 text-center text-gray-500 dark:text-neutral-light text-sm">
-                      No budget items yet
+                      {t('noBudgetItems') || 'No budget items yet'}
                     </td>
                   </tr>
                 ) : (
                   items.map(item => (
                     <tr key={item.id} className="border-t border-gray-200 dark:border-neutral-medium/30 hover:bg-gray-50 dark:hover:bg-[#353844] transition-colors">
-                      <td className="py-3 px-4 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.date}</td>
-                      <td className="py-3 text-sm text-gray-900 dark:text-white">{item.category}</td>
-                      <td className="py-3">
+                      <td className="py-3 px-4 text-sm text-gray-900 dark:text-white whitespace-nowrap text-center">{formatDateShort(item.date)}</td>
+                      <td className="py-3 text-sm text-gray-900 dark:text-white text-center">{item.category}</td>
+                      <td className="py-3 text-center">
                         <span className={`text-xs font-semibold px-3 py-1 rounded-lg ${
                           item.type === "expense" 
                             ? "bg-semantic-pink/20 dark:bg-semantic-pink/20 text-semantic-pink border border-semantic-pink/30" 
@@ -336,10 +351,10 @@ export default function BudgetList({ onChanged = () => {} }) {
                           {item.type === 'expense' ? t('expense') : t('income')}
                         </span>
                       </td>
-                      <td className="py-3 text-right text-sm font-bold text-gray-900 dark:text-white">
+                      <td className="py-3 text-center text-sm font-bold text-gray-900 dark:text-white">
                         {format(item.amount, language)}
                       </td>
-                      <td className="py-3 text-right">
+                      <td className="py-3 text-center">
                         <button 
                           onClick={() => handleDelete(item.id)} 
                           className="icon-btn hover:bg-semantic-pink/20 border-semantic-pink/30" 
