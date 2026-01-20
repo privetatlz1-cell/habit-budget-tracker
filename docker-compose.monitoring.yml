@@ -29,8 +29,6 @@ services:
     image: docker.elastic.co/kibana/kibana:8.11.3
     volumes:
       - ./monitoring/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
-    ports:
-      - "5601:5601"
     depends_on:
       - elasticsearch
     networks:
@@ -95,7 +93,8 @@ volumes:
 
 networks:
   monitoring:
-    driver: bridge
+    external: true
+    name: monitoring-net
   app-network:
     external: true
     name: ${APP_NETWORK_NAME}

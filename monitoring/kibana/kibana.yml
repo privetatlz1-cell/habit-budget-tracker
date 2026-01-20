@@ -3,3 +3,5 @@ elasticsearch.hosts: ["http://elasticsearch:9200"]
 xpack.security.enabled: false
 csp.strict: false
 csp.warnLegacyBrowsers: false
+server.basePath: "/kibana"
+server.rewriteBasePath: true
