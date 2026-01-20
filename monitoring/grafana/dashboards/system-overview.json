@@ -42,7 +42,7 @@
       "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
       "targets": [
         {
-          "expr": "100 - (node_filesystem_avail_bytes{mountpoint=\"/\",fstype!=\"tmpfs\"} / node_filesystem_size_bytes{mountpoint=\"/\",fstype!=\"tmpfs\"} * 100)",
+          "expr": "100 - (node_filesystem_avail_bytes{mountpoint=\"/\",fstype!=\"tmpfs\",fstype!=\"overlay\"} / node_filesystem_size_bytes{mountpoint=\"/\",fstype!=\"tmpfs\",fstype!=\"overlay\"} * 100)",
           "refId": "A"
         }
       ],
@@ -96,9 +96,9 @@
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
       "targets": [
         {
-          "expr": "topk(5, rate(cadvisor_container_cpu_usage_seconds_total{image!=\"\"}[5m]) * 100)",
+          "expr": "topk(5, rate(container_cpu_usage_seconds_total{image!=\"\",container!=\"\"}[5m]) * 100)",
           "refId": "A",
-          "legendFormat": "{{name}}"
+          "legendFormat": "{{container}}"
         }
       ]
     },
@@ -109,9 +109,9 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
       "targets": [
         {
-          "expr": "topk(5, cadvisor_container_memory_usage_bytes{image!=\"\"})",
+          "expr": "topk(5, container_memory_usage_bytes{image!=\"\",container!=\"\"})",
           "refId": "A",
-          "legendFormat": "{{name}}"
+          "legendFormat": "{{container}}"
         }
       ],
       "fieldConfig": {
