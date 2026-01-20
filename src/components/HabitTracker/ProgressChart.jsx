@@ -10,6 +10,8 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
     const ctx = dailyRef.current.getContext('2d');
     if (!ctx) return;
 
+    const textColor = '#cbd5f5';
+    const gridColor = 'rgba(148, 163, 184, 0.2)';
     const chart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -29,7 +31,7 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false },
+          legend: { display: false, labels: { color: textColor } },
           tooltip: {
             callbacks: {
               label: (context) => `${context.parsed.y.toFixed(1)}%`
@@ -41,8 +43,14 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
             beginAtZero: true,
             max: 100,
             ticks: {
-              callback: (value) => `${value}%`
-            }
+              callback: (value) => `${value}%`,
+              color: textColor
+            },
+            grid: { color: gridColor }
+          },
+          x: {
+            ticks: { color: textColor },
+            grid: { color: gridColor }
           }
         }
       }
@@ -56,6 +64,8 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
     const ctx = weeklyRef.current.getContext('2d');
     if (!ctx) return;
 
+    const textColor = '#cbd5f5';
+    const gridColor = 'rgba(148, 163, 184, 0.2)';
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -73,7 +83,7 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false },
+          legend: { display: false, labels: { color: textColor } },
           tooltip: {
             callbacks: {
               label: (context) => `${context.parsed.y.toFixed(1)}%`
@@ -85,8 +95,14 @@ export default function ProgressChart({ dailyData = [], weeklyData = [] }) {
             beginAtZero: true,
             max: 100,
             ticks: {
-              callback: (value) => `${value}%`
-            }
+              callback: (value) => `${value}%`,
+              color: textColor
+            },
+            grid: { color: gridColor }
+          },
+          x: {
+            ticks: { color: textColor },
+            grid: { color: gridColor }
           }
         }
       }

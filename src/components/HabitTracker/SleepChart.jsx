@@ -65,6 +65,8 @@ export default function SleepChart({ data = [] }) {
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
+    const textColor = '#cbd5f5';
+    const gridColor = 'rgba(148, 163, 184, 0.2)';
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -93,7 +95,8 @@ export default function SleepChart({ data = [] }) {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false
+            display: false,
+            labels: { color: textColor }
           },
           tooltip: {
             callbacks: {
@@ -113,16 +116,18 @@ export default function SleepChart({ data = [] }) {
               stepSize: 2,
               callback: function(value) {
                 return value + 'h';
-              }
+              },
+              color: textColor
             },
             grid: {
-              color: 'rgba(0, 0, 0, 0.05)'
+              color: gridColor
             }
           },
           x: {
             grid: {
               display: false
-            }
+            },
+            ticks: { color: textColor }
           }
         }
       }

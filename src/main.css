@@ -117,6 +117,14 @@ body {
   transform: scale(0.98);
 }
 
+.btn-primary {
+  color: #ffffff;
+}
+
+.btn-primary * {
+  color: inherit;
+}
+
 img, svg, canvas {
   max-width: 100%;
   height: auto;

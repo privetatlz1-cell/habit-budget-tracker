@@ -4,6 +4,7 @@ import HabitCard from "./HabitCard";
 import AddHabitForm from "./AddHabitForm";
 import ProgressChart from "./ProgressChart";
 import SleepChart from "./SleepChart";
+import SleepInput from "./SleepInput";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useToast } from "../Shared/Toast";
 import { isScheduledDay } from "../../utils/habitProgress";
@@ -16,6 +17,8 @@ export default function HabitList({ onChanged = () => {} }) {
   const [weekOffset, setWeekOffset] = useState(0);
   const [weekCompletions, setWeekCompletions] = useState([]);
   const [historyCompletions, setHistoryCompletions] = useState([]);
+  const [sleepEntry, setSleepEntry] = useState(null);
+  const [editingSleepDate, setEditingSleepDate] = useState(null);
   const { t } = useLanguage();
   const { showToast } = useToast();
 
@@ -79,9 +82,21 @@ export default function HabitList({ onChanged = () => {} }) {
     }
   };
 
+  const loadSleepEntry = async (dateIso) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/sleep/${dateIso}`);
+      if (!res.ok) return setSleepEntry(null);
+      const entry = await res.json();
+      setSleepEntry(entry);
+    } catch (e) {
+      setSleepEntry(null);
+    }
+  };
+
   useEffect(() => { 
     load(); 
     loadHistoryCompletions();
+    loadSleepEntry(todayIso);
   }, []);
 
   useEffect(() => {
@@ -286,6 +301,25 @@ export default function HabitList({ onChanged = () => {} }) {
         </div>
       </div>
 
+      {/* Sleep Input Panel */}
+      <div className="mb-6">
+        <div className="card p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h4 className="text-sm font-semibold text-gray-900 dark:text-white">{t('sleepToday') || 'Sleep today'}</h4>
+            <p className="text-xs text-gray-500 dark:text-neutral-light mt-1">
+              {sleepEntry?.hours ? `${sleepEntry.hours}h` : (t('sleepPrompt') || 'Log your sleep hours for today')}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setEditingSleepDate(todayIso)}
+            className="btn-soft btn-primary w-full sm:w-auto"
+          >
+            {t('addSleepEntry') || 'Add sleep entry'}
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {habits.map(habit => {
           const list = habit.HabitCompletions || habit.completions || [];
@@ -305,6 +339,18 @@ export default function HabitList({ onChanged = () => {} }) {
           );
         })}
       </div>
+      {editingSleepDate && (
+        <SleepInput
+          date={editingSleepDate}
+          initialHours={sleepEntry?.hours}
+          onSave={(entry) => {
+            setSleepEntry(entry);
+            setEditingSleepDate(null);
+          }}
+          onClose={() => setEditingSleepDate(null)}
+        />
+      )}
     </div>
   );
 }
+

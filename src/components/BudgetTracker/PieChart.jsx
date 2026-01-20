@@ -38,7 +38,11 @@ const PieChart = React.memo(function PieChart({ data }) {
         datasets: [{
           data: chartData.values,
           backgroundColor: [
-            '#A7F3D0', '#BFDBFE', '#FBCFE8', '#FDBA74', '#C7D2FE'
+            'rgba(74, 222, 128, 0.55)',
+            'rgba(59, 130, 246, 0.5)',
+            'rgba(236, 72, 153, 0.5)',
+            'rgba(251, 146, 60, 0.55)',
+            'rgba(129, 140, 248, 0.5)'
           ],
         }]
       },
@@ -46,7 +50,7 @@ const PieChart = React.memo(function PieChart({ data }) {
         responsive: true,
         maintainAspectRatio: false,
         plugins: { 
-          legend: { position: "bottom" },
+          legend: { position: "bottom", labels: { color: '#cbd5f5' } },
           tooltip: {
             callbacks: {
               label: (context) => {

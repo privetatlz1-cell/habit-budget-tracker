@@ -214,7 +214,7 @@ export default function BudgetList({ onChanged = () => {} }) {
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
-            className="px-4 py-2.5 rounded-xl text-sm bg-white dark:bg-[#2C2F3A] text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-medium/30 focus:border-primary-purple focus:ring-2 focus:ring-primary-purple/30 outline-none transition-all"
+            className="px-4 py-2.5 rounded-xl text-sm bg-white dark:bg-[#2C2F3A] text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-medium/30 focus:border-primary-purple focus:ring-2 focus:ring-primary-purple/30 outline-none transition-all whitespace-nowrap min-w-[8.5rem]"
           />
           <select
             value={category}
@@ -325,7 +325,7 @@ export default function BudgetList({ onChanged = () => {} }) {
                 ) : (
                   items.map(item => (
                     <tr key={item.id} className="border-t border-gray-200 dark:border-neutral-medium/30 hover:bg-gray-50 dark:hover:bg-[#353844] transition-colors">
-                      <td className="py-3 px-4 text-sm text-gray-900 dark:text-white">{item.date}</td>
+                      <td className="py-3 px-4 text-sm text-gray-900 dark:text-white whitespace-nowrap">{item.date}</td>
                       <td className="py-3 text-sm text-gray-900 dark:text-white">{item.category}</td>
                       <td className="py-3">
                         <span className={`text-xs font-semibold px-3 py-1 rounded-lg ${

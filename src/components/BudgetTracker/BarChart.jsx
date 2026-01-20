@@ -34,21 +34,33 @@ const BarChart = React.memo(function BarChart({ data = [] }) {
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
+    const textColor = '#cbd5f5';
+    const gridColor = 'rgba(148, 163, 184, 0.2)';
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: series.labels,
         datasets: [
-          { label: t('income'), data: series.income, backgroundColor: '#A7F3D0' },
-          { label: t('monthlyExpenses'), data: series.expense, backgroundColor: '#FBCFE8' }
+          { label: t('income'), data: series.income, backgroundColor: 'rgba(74, 222, 128, 0.5)', borderColor: 'rgba(74, 222, 128, 0.9)', borderWidth: 1 },
+          { label: t('monthlyExpenses'), data: series.expense, backgroundColor: 'rgba(236, 72, 153, 0.45)', borderColor: 'rgba(236, 72, 153, 0.85)', borderWidth: 1 }
         ]
       },
       options: { 
         responsive: true,
         maintainAspectRatio: false,
-        scales: { y: { beginAtZero: true } }, 
+        scales: {
+          x: {
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          }
+        },
         plugins: { 
-          legend: { position: 'bottom' },
+          legend: { position: 'bottom', labels: { color: textColor } },
           tooltip: {
             callbacks: {
               label: (context) => {
