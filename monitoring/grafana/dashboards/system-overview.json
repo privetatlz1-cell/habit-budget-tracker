@@ -91,31 +91,17 @@
     },
     {
       "type": "timeseries",
-      "title": "Container CPU (top 5)",
+      "title": "Disk Used /",
       "id": 7,
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
       "targets": [
         {
-          "expr": "topk(5, rate(container_cpu_usage_seconds_total{image!=\"\",container!=\"\"}[5m]) * 100)",
-          "refId": "A",
-          "legendFormat": "{{container}}"
-        }
-      ]
-    },
-    {
-      "type": "timeseries",
-      "title": "Container Memory (top 5)",
-      "id": 8,
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
-      "targets": [
-        {
-          "expr": "topk(5, container_memory_usage_bytes{image!=\"\",container!=\"\"})",
-          "refId": "A",
-          "legendFormat": "{{container}}"
+          "expr": "100 - (node_filesystem_avail_bytes{mountpoint=\"/\",fstype!=\"tmpfs\",fstype!=\"overlay\"} / node_filesystem_size_bytes{mountpoint=\"/\",fstype!=\"tmpfs\",fstype!=\"overlay\"} * 100)",
+          "refId": "A"
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "bytes" }
+        "defaults": { "unit": "percent", "decimals": 1 }
       }
     }
   ],
