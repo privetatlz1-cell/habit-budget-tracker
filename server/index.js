@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+const promClient = require('prom-client');
 const habitRoutes = require('./routes/habits');
 const budgetRoutes = require('./routes/budget');
 const budgetPlanRoutes = require('./routes/budgetPlans');
@@ -32,6 +33,17 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json());
+
+// Prometheus metrics
+promClient.collectDefaultMetrics({ prefix: 'habit_budget_' });
+app.get('/metrics', async (_req, res) => {
+  try {
+    res.set('Content-Type', promClient.register.contentType);
+    res.end(await promClient.register.metrics());
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to collect metrics' });
+  }
+});
 
 app.use('/api/telegram', telegramRoutes);
 app.use('/api/habits', authenticate, habitRoutes);
