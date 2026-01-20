@@ -27,11 +27,8 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.11.3
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - XPACK_SECURITY_ENABLED=false
-      - CSP_STRICT=false
-      - CSP_WARN_LEGACY_BROWSERS=false
+    volumes:
+      - ./monitoring/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     ports:
       - "5601:5601"
     depends_on:
