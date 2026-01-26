@@ -258,6 +258,78 @@ Telegram Mini App требует HTTPS.
 1) `git pull` — забираем последние изменения.
 2) `docker compose up -d --build` — пересобираем образ.
 
+---
+
+## 9) Мониторинг (итоговая конфигурация)
+
+Итог: оставлены **Prometheus + Grafana + node_exporter**.  
+Вся часть логирования (ELK: Elasticsearch/Logstash/Kibana + Filebeat) **удалена** по запросу.
+
+### 9.1 Состав мониторинга
+
+**docker-compose.monitoring.yml содержит:**
+- `prometheus` — сбор метрик.
+- `grafana` — визуализация метрик.
+- `node_exporter` — метрики хоста (CPU/RAM/Disk/Load).
+
+**Удалено:**
+- `elasticsearch`
+- `logstash`
+- `kibana`
+- `filebeat`
+- конфигурация `monitoring/kibana/kibana.yml`
+
+### 9.2 Запуск мониторинга
+
+```bash
+docker compose -p monitoring --env-file monitoring/.env.monitoring -f docker-compose.monitoring.yml up -d
+```
+
+### 9.3 Порты (типовая схема)
+
+- Grafana: `3001` (если нет конфликта — оставить)
+- Prometheus: `9090`
+- node_exporter: `9100`
+
+Если порт занят — освобождаем:
+```bash
+docker ps -a --filter 'publish=3001' --format '{{.ID}}' | xargs -r docker rm -f
+docker ps -a --filter 'publish=9090' --format '{{.ID}}' | xargs -r docker rm -f
+docker ps -a --filter 'publish=9100' --format '{{.ID}}' | xargs -r docker rm -f
+```
+
+### 9.4 Проверка состояния
+
+```bash
+docker compose -p monitoring --env-file monitoring/.env.monitoring -f docker-compose.monitoring.yml ps
+```
+
+### 9.5 Grafana (визуализация)
+
+Доступ:
+- `http://<IP>:3001`
+
+Логин/пароль по умолчанию:
+- `admin / admin`
+
+Графана автоматически подхватывает:
+- datasource Prometheus
+- дашборд `System & Containers Overview` (без контейнерных метрик, т.к. cadvisor удален)
+
+### 9.6 Почему удалили Kibana и логи
+
+По запросу оставлена только метрика‑часть:
+- Kibana и весь ELK стек удалены,
+- конфигурация nginx откатана к базовому proxy на app,
+- любые внешние маршруты `/kibana` убраны.
+
+### 9.7 Важные примечания
+
+- При каждом запуске мониторинга используем `-p monitoring`, чтобы не конфликтовать с основным приложением.
+- При необходимости полного сброса:  
+  `docker compose -p monitoring ... down --remove-orphans`  
+  и повторный `up -d`.
+
 ### 8.4.1 Подготовка `.env`
 
 Перед первым запуском нужно создать `.env` в корне проекта и заполнить минимум:

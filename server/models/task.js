@@ -1,7 +1,12 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db');
+const User = require('./user');
 
 const Task = db.define('Task', {
+  UserId: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   telegramUserId: {
     type: DataTypes.STRING,
     allowNull: true
@@ -101,6 +106,9 @@ const TaskNote = db.define('TaskNote', {
 });
 
 // Associations
+User.hasMany(Task, { foreignKey: 'UserId', onDelete: 'CASCADE' });
+Task.belongsTo(User, { foreignKey: 'UserId' });
+
 Task.hasMany(Subtask, { onDelete: 'CASCADE', as: 'subtasks' });
 Subtask.belongsTo(Task);
 

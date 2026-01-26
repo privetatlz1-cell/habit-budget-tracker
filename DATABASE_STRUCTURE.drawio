@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.4">
+  <diagram id="db-structure" name="DB Structure">
+    <mxGraphModel dx="1042" dy="623" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;" value="User" vertex="1">
+          <mxGeometry height="60" width="180" x="770" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="habit" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;" value="Habit" vertex="1">
+          <mxGeometry height="60" width="180" x="40" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="habitCompletion" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff7e6;strokeColor=#666;" value="HabitCompletion" vertex="1">
+          <mxGeometry height="60" width="220" x="260" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="budgetItem" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;" value="BudgetItem" vertex="1">
+          <mxGeometry height="60" width="180" x="40" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="budgetPlan" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;" value="BudgetPlan" vertex="1">
+          <mxGeometry height="60" width="180" x="240" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="dailyNote" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;" value="DailyNote" vertex="1">
+          <mxGeometry height="60" width="180" x="40" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="sleepEntry" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;" value="SleepEntry" vertex="1">
+          <mxGeometry height="60" width="180" x="240" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="event" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;" value="Event" vertex="1">
+          <mxGeometry height="60" width="180" x="440" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="task" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;" value="Task" vertex="1">
+          <mxGeometry height="60" width="180" x="40" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="subtask" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff7e6;strokeColor=#666;" value="Subtask" vertex="1">
+          <mxGeometry height="60" width="180" x="240" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="taskAttachment" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff7e6;strokeColor=#666;" value="TaskAttachment" vertex="1">
+          <mxGeometry height="60" width="200" x="440" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="taskNote" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff7e6;strokeColor=#666;" value="TaskNote" vertex="1">
+          <mxGeometry height="60" width="180" x="660" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-user-habit" edge="1" parent="1" source="habit" style="endArrow=block;endFill=1;strokeColor=#666;" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-user-budgetItem" edge="1" parent="1" source="budgetItem" style="endArrow=block;endFill=1;strokeColor=#666;" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-user-budgetPlan" edge="1" parent="1" source="budgetPlan" style="endArrow=block;endFill=1;strokeColor=#666;" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-user-dailyNote" edge="1" parent="1" source="dailyNote" style="endArrow=block;endFill=1;strokeColor=#666;" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-user-sleepEntry" edge="1" parent="1" source="sleepEntry" style="endArrow=block;endFill=1;strokeColor=#666;" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-user-event" edge="1" parent="1" source="event" style="endArrow=block;endFill=1;strokeColor=#666;" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-user-task" edge="1" parent="1" source="task" style="endArrow=block;endFill=1;strokeColor=#666;" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-habit" edge="1" parent="1" source="habitCompletion" style="endArrow=block;endFill=1;strokeColor=#666;" target="habit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-subtask" edge="1" parent="1" source="subtask" style="endArrow=block;endFill=1;strokeColor=#666;" target="task">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-attachment" edge="1" parent="1" source="taskAttachment" style="endArrow=block;endFill=1;strokeColor=#666;" target="task">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-note" edge="1" parent="1" source="taskNote" style="endArrow=block;endFill=1;strokeColor=#666;" target="task">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

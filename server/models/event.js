@@ -1,7 +1,12 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db');
+const User = require('./user');
 
 const Event = db.define('Event', {
+  UserId: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   telegramUserId: {
     type: DataTypes.STRING,
     allowNull: true
@@ -45,6 +50,9 @@ const Event = db.define('Event', {
     defaultValue: true
   }
 });
+
+User.hasMany(Event, { foreignKey: 'UserId', onDelete: 'CASCADE' });
+Event.belongsTo(User, { foreignKey: 'UserId' });
 
 module.exports = Event;
 

@@ -66,6 +66,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { year, month, category, type, plannedAmount } = req.body;
     const telegramUserId = req.user.telegramUserId;
+    const userId = req.userRecord.id;
     
     // Validation
     if (!year || !month || !category || !type || plannedAmount === undefined) {
@@ -106,6 +107,7 @@ router.post('/', async (req, res, next) => {
         type
       },
       defaults: {
+        UserId: userId,
         telegramUserId,
         plannedAmount: numAmount
       }
@@ -114,6 +116,9 @@ router.post('/', async (req, res, next) => {
     // Update if it already existed
     if (!created) {
       plan.plannedAmount = numAmount;
+      if (!plan.UserId) {
+        plan.UserId = userId;
+      }
       await plan.save();
     }
     

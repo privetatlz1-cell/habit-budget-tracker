@@ -1,7 +1,12 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db');
+const User = require('./user');
 
 const Habit = db.define('Habit', {
+  UserId: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   telegramUserId: {
     type: DataTypes.STRING,
     allowNull: true
@@ -30,6 +35,9 @@ const HabitCompletion = db.define('HabitCompletion', {
     { unique: true, fields: ['HabitId', 'date'] }
   ]
 });
+
+User.hasMany(Habit, { foreignKey: 'UserId', onDelete: 'CASCADE' });
+Habit.belongsTo(User, { foreignKey: 'UserId' });
 
 Habit.hasMany(HabitCompletion, { onDelete: 'CASCADE' });
 HabitCompletion.belongsTo(Habit);

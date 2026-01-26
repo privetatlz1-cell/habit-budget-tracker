@@ -1,0 +1,171 @@
+Project HabitBudgetTracker {
+  database_type: "MySQL"
+  Note: "Schema derived from Sequelize models in server/models"
+}
+
+Table User {
+  id int [pk, increment]
+  telegramUserId varchar [unique, note: "Telegram user id, may be null"]
+  username varchar
+  firstName varchar
+  lastName varchar
+  photoUrl text
+  lastLoginAt datetime
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table Habit {
+  id int [pk, increment]
+  UserId int
+  telegramUserId varchar
+  name varchar [not null]
+  description varchar
+  category varchar
+  frequency varchar [not null, default: "daily", note: "daily|weekly|monthly"]
+  schedule json [note: "weekly: [\"mon\",\"wed\"], monthly: [1,15], daily: null"]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table HabitCompletion {
+  id int [pk, increment]
+  HabitId int [not null]
+  date date [not null]
+  completed boolean [default: false]
+  createdAt datetime
+  updatedAt datetime
+  Indexes {
+    (HabitId, date) [unique]
+  }
+}
+
+Table BudgetItem {
+  id int [pk, increment]
+  UserId int
+  telegramUserId varchar
+  type varchar [not null, note: "income|expense"]
+  amount float [not null]
+  category varchar
+  date date [default: `CURRENT_DATE`]
+  description varchar
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table BudgetPlan {
+  id int [pk, increment]
+  UserId int
+  telegramUserId varchar
+  year int [not null]
+  month int [not null, note: "1..12"]
+  category varchar [not null]
+  type varchar [not null, note: "income|expense"]
+  plannedAmount float [not null, note: ">= 0"]
+  createdAt datetime
+  updatedAt datetime
+  Indexes {
+    (telegramUserId, year, month, category, type) [unique]
+  }
+}
+
+Table DailyNote {
+  id int [pk, increment]
+  UserId int
+  telegramUserId varchar
+  date date [not null]
+  title varchar
+  content text
+  createdAt datetime
+  updatedAt datetime
+  Indexes {
+    (telegramUserId, date) [unique]
+  }
+}
+
+Table SleepEntry {
+  id int [pk, increment]
+  UserId int
+  telegramUserId varchar
+  date date [not null]
+  hours float [not null, note: "0..24"]
+  createdAt datetime
+  updatedAt datetime
+  Indexes {
+    (telegramUserId, date) [unique]
+  }
+}
+
+Table Event {
+  id int [pk, increment]
+  UserId int
+  telegramUserId varchar
+  title varchar [not null]
+  description text
+  startDate date [not null]
+  startTime time
+  endDate date
+  endTime time
+  category varchar [not null, default: "Personal"]
+  color varchar [not null, default: "#6C5DD3"]
+  allDay boolean [default: true]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table Task {
+  id int [pk, increment]
+  UserId int
+  telegramUserId varchar
+  type varchar [not null, note: "personal|work"]
+  title varchar [not null]
+  description text
+  startDate date
+  dueDate date
+  priority varchar [not null, default: "Medium", note: "Low|Medium|High|Urgent"]
+  category varchar [not null, default: "Personal"]
+  status varchar [not null, default: "todo", note: "todo|in_progress|done"]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table Subtask {
+  id int [pk, increment]
+  TaskId int [not null]
+  title varchar [not null]
+  completed boolean [default: false]
+  "order" int [default: 0]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table TaskAttachment {
+  id int [pk, increment]
+  TaskId int [not null]
+  fileName varchar [not null]
+  filePath varchar [not null]
+  fileSize int
+  mimeType varchar
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table TaskNote {
+  id int [pk, increment]
+  TaskId int [not null]
+  content text [not null]
+  createdAt datetime
+  updatedAt datetime
+}
+
+Ref: HabitCompletion.HabitId > Habit.id
+Ref: Habit.UserId > User.id
+Ref: BudgetItem.UserId > User.id
+Ref: BudgetPlan.UserId > User.id
+Ref: DailyNote.UserId > User.id
+Ref: SleepEntry.UserId > User.id
+Ref: Event.UserId > User.id
+Ref: Task.UserId > User.id
+Ref: Subtask.TaskId > Task.id
+Ref: TaskAttachment.TaskId > Task.id
+Ref: TaskNote.TaskId > Task.id

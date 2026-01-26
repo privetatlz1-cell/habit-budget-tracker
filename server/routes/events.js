@@ -77,6 +77,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { title, description, startDate, startTime, endDate, endTime, category, color, allDay } = req.body;
     const telegramUserId = req.user.telegramUserId;
+    const userId = req.userRecord.id;
     
     // Validation
     if (!title || !title.trim()) {
@@ -89,6 +90,7 @@ router.post('/', async (req, res, next) => {
     
     const startDateStr = startDate.slice(0, 10);
     const event = await Event.create({
+      UserId: userId,
       telegramUserId,
       title: title.trim(),
       description: description ? description.trim() : null,

@@ -97,6 +97,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { date, hours } = req.body;
     const telegramUserId = req.user.telegramUserId;
+    const userId = req.userRecord.id;
     
     // Validation
     if (!date || hours === undefined || hours === null) {
@@ -111,12 +112,15 @@ router.post('/', async (req, res, next) => {
     // Find or create entry
     const [entry, created] = await SleepEntry.findOrCreate({
       where: { date: date.slice(0, 10), telegramUserId },
-      defaults: { hours: numHours, telegramUserId }
+      defaults: { hours: numHours, telegramUserId, UserId: userId }
     });
     
     // Update if it already existed
     if (!created) {
       entry.hours = numHours;
+      if (!entry.UserId) {
+        entry.UserId = userId;
+      }
       await entry.save();
     }
     

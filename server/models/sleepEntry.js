@@ -1,7 +1,12 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db');
+const User = require('./user');
 
 const SleepEntry = db.define('SleepEntry', {
+  UserId: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   telegramUserId: {
     type: DataTypes.STRING,
     allowNull: true
@@ -23,6 +28,9 @@ const SleepEntry = db.define('SleepEntry', {
     { unique: true, fields: ['telegramUserId', 'date'] }
   ]
 });
+
+User.hasMany(SleepEntry, { foreignKey: 'UserId', onDelete: 'CASCADE' });
+SleepEntry.belongsTo(User, { foreignKey: 'UserId' });
 
 module.exports = SleepEntry;
 

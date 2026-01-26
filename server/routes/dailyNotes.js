@@ -52,6 +52,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { date, title, content } = req.body;
     const telegramUserId = req.user.telegramUserId;
+    const userId = req.userRecord.id;
     
     if (!date) {
       return res.status(400).json({ error: 'Date is required' });
@@ -66,6 +67,7 @@ router.post('/', async (req, res, next) => {
     const [note, created] = await DailyNote.findOrCreate({
       where: { date, telegramUserId },
       defaults: { 
+        UserId: userId,
         telegramUserId,
         title: title ? title.trim() : null,
         content: content ? content.trim() : null 
@@ -76,6 +78,9 @@ router.post('/', async (req, res, next) => {
     if (!created) {
       if (title !== undefined) note.title = title ? title.trim() : null;
       if (content !== undefined) note.content = content ? content.trim() : null;
+      if (!note.UserId) {
+        note.UserId = userId;
+      }
       await note.save();
     }
     
@@ -91,10 +96,12 @@ router.put('/:date', async (req, res, next) => {
     const { date } = req.params;
     const { title, content } = req.body;
     const telegramUserId = req.user.telegramUserId;
+    const userId = req.userRecord.id;
     
     const [note, created] = await DailyNote.findOrCreate({
       where: { date, telegramUserId },
       defaults: { 
+        UserId: userId,
         telegramUserId,
         title: title ? title.trim() : null,
         content: content ? content.trim() : null 
@@ -104,6 +111,9 @@ router.put('/:date', async (req, res, next) => {
     if (!created) {
       if (title !== undefined) note.title = title ? title.trim() : null;
       if (content !== undefined) note.content = content ? content.trim() : null;
+      if (!note.UserId) {
+        note.UserId = userId;
+      }
       await note.save();
     }
     

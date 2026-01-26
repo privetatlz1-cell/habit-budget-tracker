@@ -22,6 +22,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { type, amount, category, description, date } = req.body;
     const telegramUserId = req.user.telegramUserId;
+    const userId = req.userRecord.id;
 
     if (!['income', 'expense'].includes(type)) {
       return res.status(400).json({ error: 'Type must be "income" or "expense"' });
@@ -36,6 +37,7 @@ router.post('/', async (req, res, next) => {
     let isoDate = date && typeof date === 'string' ? date.slice(0,10) : new Date().toISOString().slice(0,10);
 
     const item = await BudgetItem.create({
+      UserId: userId,
       telegramUserId,
       type,
       amount: numAmount,

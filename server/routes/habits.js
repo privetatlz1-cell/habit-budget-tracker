@@ -22,6 +22,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { name, description, category, frequency, schedule } = req.body;
     const telegramUserId = req.user.telegramUserId;
+    const userId = req.userRecord.id;
 
     // Validate name
     if (!name || typeof name !== 'string' || !name.trim()) {
@@ -63,6 +64,7 @@ router.post('/', async (req, res, next) => {
     // For daily, schedule is null (which is valid)
 
     const habit = await Habit.create({
+      UserId: userId,
       telegramUserId,
       name: name.trim(),
       description: description ? description.trim() : null,

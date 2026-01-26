@@ -1,4 +1,4 @@
-﻿# Docker Compose - Multi-container app
+# Docker Compose - Multi-container app
 #
 # Usage:
 #   docker-compose up --build
@@ -64,6 +64,7 @@ services:
         condition: service_started
     networks:
       - app-network
+      - monitoring-net
     restart: unless-stopped
 
 volumes:
@@ -73,3 +74,6 @@ volumes:
 networks:
   app-network:
     driver: bridge
+  monitoring-net:
+    external: true
+    name: monitoring-net

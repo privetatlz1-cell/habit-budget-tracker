@@ -108,6 +108,7 @@ router.post('/', async (req, res, next) => {
   try {
     const { type, title, description, startDate, dueDate, priority, category, status, subtasks } = req.body;
     const telegramUserId = req.user.telegramUserId;
+    const userId = req.userRecord.id;
 
     if (!type || !['personal', 'work'].includes(type)) {
       return res.status(400).json({ error: 'Type must be "personal" or "work"' });
@@ -118,6 +119,7 @@ router.post('/', async (req, res, next) => {
     }
 
     const task = await Task.create({
+      UserId: userId,
       telegramUserId,
       type,
       title: title.trim(),
